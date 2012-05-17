@@ -66,8 +66,9 @@ function genRandPoints(rangeX, rangeY, quantity){
 var anim;
 (function(){
 	var graphic=VectorGraphic.init(document.getElementById("map"), 600, 600);
-	var points=genRandPoints(graphic.dimX, graphic.dimY, 2);
-	var polygons=null;
+	var points;
+	var polygons;
+	var frameReqId;
 
 	function initGui(){
 		$("#go_stop_button").data("status", "go").click(function () {
@@ -108,7 +109,7 @@ var anim;
 
 	function animation(){
 		singleRun();
-		window.requestAnimationFrame(animation);
+		frameReqId=window.requestAnimationFrame(animation);
 	};
 
 	function startNewIteration(sites) {
@@ -118,12 +119,11 @@ var anim;
 		
 		points=genRandPoints(graphic.dimX, graphic.dimY, sites);
 		animation();
-
-
 	};
 
 	function stopIteration(){
-		window.cancelAnimationFrame();
+		window.cancelAnimationFrame(frameReqId);
+		graphic.paper.clear();
 		genVoronoi();
 		displayVoronoi();
 	}
