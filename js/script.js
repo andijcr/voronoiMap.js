@@ -63,11 +63,25 @@ function genRandPoints(rangeX, rangeY, quantity){
 	return pp;
 }
 
+var anim;
 (function(){
 	var graphic=VectorGraphic.init(document.getElementById("map"), 600, 600);
-	var points=genRandPoints(graphic.dimX, graphic.dimY, 50);
+	var points=genRandPoints(graphic.dimX, graphic.dimY, 2);
 	var polygons=null;
-	
+
+	function initGui(){
+		$("#go_stop_button").data("status", "go").click(function () {
+			if($(this).data("status")==="go"){
+				$(this).data("status", "stop").html("Stop!");
+				startNewIteration( parseInt( $('#site_num').val() ) );
+			}else{
+				$(this).data("status", "go").html("Go!");
+				stopIteration();
+			}
+			return false;
+		});
+	};
+
 	function genVoronoi(){
 		polygons=d3.geom.voronoi(points);
 		var clipper=d3.geom.polygon([[0,0],[0,graphic.dimY],[graphic.dimX, graphic.dimY],[graphic.dimX,0]]);
@@ -91,12 +105,31 @@ function genRandPoints(rangeX, rangeY, quantity){
 		displayVoronoi();
 		relaxCentroid();
 	};
+
 	function animation(){
 		singleRun();
-		webkitRequestAnimationFrame(animation);
+		window.requestAnimationFrame(animation);
 	};
 
-	animation();
+	function startNewIteration(sites) {
+		if(sites===NaN||sites<2){
+			sites=2
+		}
+		
+		points=genRandPoints(graphic.dimX, graphic.dimY, sites);
+		animation();
+
+
+	};
+
+	function stopIteration(){
+		window.cancelAnimationFrame();
+		genVoronoi();
+		displayVoronoi();
+	}
+
+	initGui();
+//	animation();
 })();
 
 

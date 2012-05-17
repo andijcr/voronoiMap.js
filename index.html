@@ -10,19 +10,60 @@
 	<meta name="author" content="Andrea Barbadoro">
 	<meta name="viewport" content="width=device-width">
 	<script src="js/libs/modernizr-2.5.3-respond-1.1.0.min.js"></script>
+	<style type="text/css">
+		#controls{
+			width: 20%;
+			float: left;
+		}
+		#map{
+			float: left;
+		}
+	</style>
 </head>
 <body>
-<a href="http://www-cs-students.stanford.edu/~amitp/game-programming/polygon-map-generation/">
-	http://www-cs-students.stanford.edu/~amitp/game-programming/polygon-map-generation/
-</a><br>
-<a href="http://raphaeljs.com/">
-	http://raphaeljs.com/
-</a>
+<section id="references">
+	<p><a href="http://www-cs-students.stanford.edu/~amitp/game-programming/polygon-map-generation/">
+		http://www-cs-students.stanford.edu/~amitp/game-programming/polygon-map-generation/
+	</a><br>
+	<a href="http://raphaeljs.com/">
+		http://raphaeljs.com/
+	</a></p>
+</section>
 <div id="map"></div>
+<section id="controls">
+	<p>Numero di Siti: <input type="number" name="quantity" min="2" id="site_num"/></p>
+	<p><button id="go_stop_button" type="button">Go</button></p>
+</section>
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
 <script>window.jQuery || document.write('<script src="js/libs/jquery-1.7.2.min.js"><\/script>')</script>
 <script src="http://mbostock.github.com/d3/d3.v2.min.js"></script>
 <script src="js/libs/raphael-min.js"></script>
+<script>
+(function() {
+    var lastTime = 0;
+    var vendors = ['ms', 'moz', 'webkit', 'o'];
+    for(var x = 0; x < vendors.length && !window.requestAnimationFrame; ++x) {
+        window.requestAnimationFrame = window[vendors[x]+'RequestAnimationFrame'];
+        window.cancelAnimationFrame = window[vendors[x]+'CancelAnimationFrame'] 
+                                   || window[vendors[x]+'CancelRequestAnimationFrame'];
+    }
+ 
+    if (!window.requestAnimationFrame)
+        window.requestAnimationFrame = function(callback, element) {
+            var currTime = new Date().getTime();
+            var timeToCall = Math.max(0, 16 - (currTime - lastTime));
+            var id = window.setTimeout(function() { callback(currTime + timeToCall); }, 
+              timeToCall);
+            lastTime = currTime + timeToCall;
+            return id;
+        };
+ 
+    if (!window.cancelAnimationFrame)
+        window.cancelAnimationFrame = function(id) {
+            clearTimeout(id);
+        };
+}());
+</script>
 <script src="js/script.js"></script>
 </body>
 </html>
